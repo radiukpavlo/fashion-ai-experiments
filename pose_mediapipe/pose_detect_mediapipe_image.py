@@ -45,7 +45,7 @@ def detect_pose(image_pose, pose, draw=False, display=False):
 
 
 # Here we will read our image from the specified path to detect the pose
-image_path = 'images/test_image_1.jpg'
+image_path = 'images/test_image_10.jpg'
 output = cv2.imread(image_path)
 
 detect_pose(output, pose_image, draw=True, display=True)
