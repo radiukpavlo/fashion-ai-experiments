@@ -1,0 +1,3 @@
+python image_demo.py ../images/test_image_10.jpg checkpoints/td-hm_hrnet-w48_8xb32-210e_coco-256x192.py checkpoints/hrnet_w48_coco_256x192-b9e0b3ab_20200708.pth --out-file vis_results.jpg --device=cpu
+
+python inferencer_demo.py ../images --pose2d wholebody --vis-out-dir ../images_output

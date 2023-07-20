@@ -1,0 +1,3 @@
+
+pose_mmpose/checkpoints/td-hm_hrnet-w48_8xb32-210e_coco-256x192-0e67c616_20220913.pth
+pose_mmpose/checkpoints/hrnet_w48_coco_256x192-b9e0b3ab_20200708.pth
