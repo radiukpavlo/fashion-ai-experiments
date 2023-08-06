@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Virtual Try On</title>
+    <style>
+        /* CSS to align buttons and messages */
+        .upload-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .done-message {
+            margin-left: 10px;
+            display: none;
+        }
+
+        .scroll-container {
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        /* CSS to style each image container inside the scrollbar */
+        .image-container {
+            display: inline-block;
+            padding: 5px;
+        }
+
+        .wait-message {
+            margin-left: 10px; /* Add some space between the button and the message */
+            display: none; /* Hide the message by default */
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload Image of a Person</h1>
+    <div class="upload-container">
+        <input type="file" id="personImageInput">
+        <button onclick="uploadPersonImage(this)">Upload Person Image</button>
+        <span class="done-message">Done</span>
+    </div>
+
+    <h1>Upload Image of a Clothing Item</h1>
+    <div class="upload-container">
+        <input type="file" id="clothingImageInput">
+        <button onclick="uploadClothingImage(this)">Upload Clothing Image</button>
+        <span class="done-message">Done</span>
+    </div>
+
+    <h1>Virtual Try On</h1>
+    <div class="upload-container">
+        <button onclick="runVirtualTryOn(this)">Run Virtual Try On</button>
+        <div id="waitMessage" class="wait-message">Please wait, processing...</div>
+        <span class="done-message">Done</span>
+    </div>
+    <div class="scroll-container" id="scrollContainer">
+        <!-- This div will be populated with image containers dynamically -->
+    </div>
+
+    <h1>Reset</h1>
+    <div class="upload-container">
+        <button onclick="resetImages(this)">Reset Images and Results</button>
+        <span class="done-message">Done</span>
+    </div>
+
+    <!-- Add a "wait" message container -->
+    <div id="waitMessage" style="display: none;">Please wait, processing...</div>
+
+
+    <script>
+        function uploadPersonImage(button) {
+            const fileInput = document.getElementById('personImageInput');
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            fetch('/upload/person/', {
+                method: 'POST',
+                body: formData,
+            })
+            showDoneMessage(button);
+        }
+
+        function uploadClothingImage(button) {
+            const fileInput = document.getElementById('clothingImageInput');
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            fetch('/upload/clothing/', {
+                method: 'POST',
+                body: formData,
+            })
+            showDoneMessage(button);
+        }
+
+        function runVirtualTryOn(button) {
+            const waitMessage = document.getElementById("waitMessage");
+            waitMessage.style.display = "block";
+            
+            // Call the FastAPI endpoint to run Virtual Try On for all uploaded pairs
+            fetch('/virtual_try_on_all/', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                waitMessage.style.display = "none";
+                const resultImages = data.result_images;
+                updateResultImages(resultImages);
+                showDoneMessage(this);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function updateResultImages(resultImages) {
+            const scrollContainer = document.getElementById("scrollContainer");
+
+            // Clear previous image containers, if any
+            scrollContainer.innerHTML = "";
+
+            // Create image containers for each result image
+            for (let i = 0; i < resultImages.length; i++) {
+                const imageContainer = document.createElement("div");
+                imageContainer.classList.add("image-container");
+
+                const imageElement = document.createElement("img");
+                // Use the new route to fetch the images
+                imageElement.src = `/get_result_image/${resultImages[i]}`;
+                imageContainer.appendChild(imageElement);
+
+                scrollContainer.appendChild(imageContainer);
+            }
+        }
+
+        function resetImages(button) {
+            const scrollContainer = document.getElementById("scrollContainer");
+            scrollContainer.innerHTML = "";
+            
+            // Call the FastAPI endpoint to reset images and results
+            fetch('/reset/', {
+                method: 'POST'
+            })
+            showDoneMessage(button);
+        }
+
+        function showDoneMessage(button) {
+            const doneMessage = button.nextElementSibling;
+            doneMessage.style.display = "inline";
+
+            // Hide the "Done" message after 3 seconds (3000 milliseconds)
+            setTimeout(() => {
+                doneMessage.style.display = "none";
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
