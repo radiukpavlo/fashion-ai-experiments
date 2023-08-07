@@ -69,13 +69,14 @@ class MaskNorm(nn.Module):
         mask = mask.detach()
         normalized_foreground = self.normalize_region(x * mask, mask)
         normalized_background = self.normalize_region(x * (1 - mask), 1 - mask)
+
         return normalized_foreground + normalized_background
 
 
 class SPADENorm(nn.Module):
-    def __init__(self,opt, norm_type, norm_nc, label_nc):
+    def __init__(self, opt, norm_type, norm_nc, label_nc):
         super(SPADENorm, self).__init__()
-        self.param_opt=opt
+        self.param_opt = opt
         self.noise_scale = nn.Parameter(torch.zeros(norm_nc))
 
         assert norm_type.startswith('alias')
@@ -101,11 +102,10 @@ class SPADENorm(nn.Module):
     def forward(self, x, seg, misalign_mask=None):
         # Part 1. Generate parameter-free normalized activations.
         b, c, h, w = x.size()
-        if self.param_opt.cuda :
+        if self.param_opt.cuda is True:
             noise = (torch.randn(b, w, h, 1).cuda() * self.noise_scale).transpose(1, 3)
         else:
-            noise = (torch.randn(b, w, h, 1)* self.noise_scale).transpose(1, 3)
-
+            noise = (torch.randn(b, w, h, 1) * self.noise_scale).transpose(1, 3)
 
         if misalign_mask is None:
             normalized = self.param_free_norm(x + noise)
@@ -147,10 +147,10 @@ class SPADEResBlock(nn.Module):
             subnorm_type = 'aliasmask'
             gen_semantic_nc = gen_semantic_nc + 1
 
-        self.norm_0 = SPADENorm(opt,subnorm_type, input_nc, gen_semantic_nc)
-        self.norm_1 = SPADENorm(opt,subnorm_type, middle_nc, gen_semantic_nc)
+        self.norm_0 = SPADENorm(opt, subnorm_type, input_nc, gen_semantic_nc)
+        self.norm_1 = SPADENorm(opt, subnorm_type, middle_nc, gen_semantic_nc)
         if self.learned_shortcut:
-            self.norm_s = SPADENorm(opt,subnorm_type, input_nc, gen_semantic_nc)
+            self.norm_s = SPADENorm(opt, subnorm_type, input_nc, gen_semantic_nc)
 
         self.relu = nn.LeakyReLU(0.2)
 
@@ -177,7 +177,7 @@ class SPADEGenerator(BaseNetwork):
     def __init__(self, opt, input_nc):
         super(SPADEGenerator, self).__init__()
         self.num_upsampling_layers = opt.num_upsampling_layers
-        self.param_opt=opt
+        self.param_opt = opt
         self.sh, self.sw = self.compute_latent_vector_size(opt)
 
         nf = opt.ngf

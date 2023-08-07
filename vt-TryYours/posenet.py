@@ -9,7 +9,7 @@ import json
 # testfile = "origin"+".jpg"
 testfile = "./static_temp/resized_img.jpg"
 net = load_model(101)
-net = net.cuda()
+# net = net.cuda()
 output_stride = net.output_stride
 scale_factor = 1.0
 
@@ -17,7 +17,8 @@ input_image, draw_image, output_scale = posenet.read_imgfile(testfile, scale_fac
                                                              output_stride=output_stride)
 # print(input_image)
 with torch.no_grad():
-    input_image = torch.Tensor(input_image).cuda()
+    # input_image = torch.Tensor(input_image).cuda()
+    input_image = torch.Tensor(input_image)
 
     heatmaps_result, offsets_result, displacement_fwd_result, displacement_bwd_result = net(input_image)
 

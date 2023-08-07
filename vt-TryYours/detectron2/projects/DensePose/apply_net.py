@@ -111,6 +111,8 @@ class InferenceAction(Action):
         cls: type, config_fpath: str, model_fpath: str, args: argparse.Namespace, opts: List[str]
     ):
         cfg = get_cfg()
+        if not torch.cuda.is_available():
+            cfg.MODEL.DEVICE = "cpu"
         add_densepose_config(cfg)
         cfg.merge_from_file(config_fpath)
         cfg.merge_from_list(args.opts)
@@ -118,6 +120,7 @@ class InferenceAction(Action):
             cfg.merge_from_list(opts)
         cfg.MODEL.WEIGHTS = model_fpath
         cfg.freeze()
+
         return cfg
 
     @classmethod

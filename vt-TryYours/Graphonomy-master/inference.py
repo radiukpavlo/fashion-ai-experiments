@@ -23,7 +23,7 @@ import torch.nn.functional as F
 
 import warnings
 
-sys.path.append('./')
+# sys.path.append('./')
 warnings.filterwarnings("ignore")
 
 label_colours = [(0, 0, 0), (128, 0, 0), (255, 0, 0), (0, 85, 0), (170, 0, 51),
@@ -97,25 +97,36 @@ def img_transform(img, transform=None):
     return sample
 
 
-def inference(net, img_path='', output_path='./', output_name='f', use_gpu=True):
+def inference(net, img_path='', output_path='', output_name='f', use_gpu=False):
     """
     :param use_gpu:
     :param output_name:
-    :param net:
+    :param net:c
     :param img_path:
     :param output_path:
     :return:
     """
     # adj
     adj2_ = torch.from_numpy(graph.cihp2pascal_nlp_adj).float()
-    adj2_test = adj2_.unsqueeze(0).unsqueeze(0).expand(1, 1, 7, 20).cuda().transpose(2, 3)
+    adj2_test = adj2_.unsqueeze(0).unsqueeze(0).expand(1, 1, 7, 20).transpose(2, 3)
 
     adj1_ = Variable(torch.from_numpy(graph.preprocess_adj(graph.pascal_graph)).float())
-    adj3_test = adj1_.unsqueeze(0).unsqueeze(0).expand(1, 1, 7, 7).cuda()
+    adj3_test = adj1_.unsqueeze(0).unsqueeze(0).expand(1, 1, 7, 7)
 
     cihp_adj = graph.preprocess_adj(graph.cihp_graph)
     adj3_ = Variable(torch.from_numpy(cihp_adj).float())
-    adj1_test = adj3_.unsqueeze(0).unsqueeze(0).expand(1, 1, 20, 20).cuda()
+    adj1_test = adj3_.unsqueeze(0).unsqueeze(0).expand(1, 1, 20, 20)
+
+    # # adj
+    # adj2_ = torch.from_numpy(graph.cihp2pascal_nlp_adj).float()
+    # adj2_test = adj2_.unsqueeze(0).unsqueeze(0).expand(1, 1, 7, 20).cuda().transpose(2, 3)
+    #
+    # adj1_ = Variable(torch.from_numpy(graph.preprocess_adj(graph.pascal_graph)).float())
+    # adj3_test = adj1_.unsqueeze(0).unsqueeze(0).expand(1, 1, 7, 7).cuda()
+    #
+    # cihp_adj = graph.preprocess_adj(graph.cihp_graph)
+    # adj3_ = Variable(torch.from_numpy(cihp_adj).float())
+    # adj1_test = adj3_.unsqueeze(0).unsqueeze(0).expand(1, 1, 20, 20).cuda()
 
     # multi-scale
     scale_list = [1, 0.5, 0.75, 1.25, 1.5, 1.75]
@@ -157,10 +168,11 @@ def inference(net, img_path='', output_path='./', output_name='f', use_gpu=True)
         inputs = Variable(inputs, requires_grad=False)
 
         with torch.no_grad():
-            if use_gpu >= 0:
-                inputs = inputs.cuda()
+            # if use_gpu >= 0:
+            #     inputs = inputs.cuda()
             # outputs = net.forward(inputs)
-            outputs = net.forward(inputs, adj1_test.cuda(), adj3_test.cuda(), adj2_test.cuda())
+            outputs = net.forward(inputs, adj1_test, adj3_test, adj2_test)
+            # outputs = net.forward(inputs, adj1_test.cuda(), adj3_test.cuda(), adj2_test.cuda())
             outputs = (outputs[0] + flip(flip_cihp(outputs[1]), dim=-1)) / 2
             outputs = outputs.unsqueeze(0)
 
@@ -186,30 +198,31 @@ if __name__ == '__main__':
     '''argparse begin'''
     parser = argparse.ArgumentParser()
     # parser.add_argument('--loadmodel',default=None,type=str)
-    parser.add_argument('--loadmodel', default='./data/pretrained_model/inference.pth', type=str)
-    parser.add_argument('--img_path', default='./images_temp/resized_img.jpg', type=str)
-    parser.add_argument('--output_path', default='./images_temp/', type=str)
+    parser.add_argument('--loadmodel', default='./Graphonomy-master/data/pretrained_model/inference.pth', type=str)
+    parser.add_argument('--img_path', default='', type=str)
+    parser.add_argument('--output_path', default='', type=str)
     parser.add_argument('--output_name', default='resized_segmentation_img', type=str)
-    parser.add_argument('--use_gpu', default=1, type=int)
+    parser.add_argument('--use_gpu', default=-1, type=int)
+    # parser.add_argument('--cuda', default=False, help='cuda or cpu')
     opts = parser.parse_args()
 
     net = deeplab_xception_transfer.deeplab_xception_transfer_projection_savemem(n_classes=20,
                                                                                  hidden_layers=128,
                                                                                  source_classes=7, )
     if not opts.loadmodel == '':
-        x = torch.load(opts.loadmodel)
+        x = torch.load(opts.loadmodel, map_location=torch.device('cpu'))
         net.load_source_model(x)
         print('Load model:', opts.loadmodel)
     else:
         print('No model load!')
         raise RuntimeError('No model!')
 
-    if opts.use_gpu > 0:
-        net.cuda()
-        use_gpu = True
-    else:
-        use_gpu = False
-        raise RuntimeError('Must use the gpu!')
+    # if opts.use_gpu > 0:
+    #     net.cuda()
+    #     use_gpu = True
+    # else:
+    #     use_gpu = False
+    #     raise RuntimeError('Must use the gpu!')
 
     inference(net=net, img_path=opts.img_path, output_path=opts.output_path, output_name=opts.output_name,
-              use_gpu=use_gpu)
+              use_gpu=False)

@@ -105,7 +105,7 @@ def get_parser():
     parser.add_argument('--loadmodel', default='', type=str)
     parser.add_argument('--txt_file', default='', type=str)
     parser.add_argument('--hidden_layers', default=128, type=int)
-    parser.add_argument('--gpus', default=4, type=int)
+    parser.add_argument('--gpus', default=0, type=int)
     parser.add_argument('--output_path', default='./results/', type=str)
     parser.add_argument('--gt_path', default='./results/', type=str)
     opts = parser.parse_args()

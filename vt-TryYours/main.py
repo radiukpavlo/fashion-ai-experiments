@@ -24,7 +24,7 @@ if __name__ == '__main__':
     img = cv2.imread('./static_temp/origin.jpg')
     img = cv2.resize(img, (384, 512))
     cv2.imwrite("./static_temp/resized_img.jpg", img)
-    cv2.imwrite("./Graphonomy-master/images_temp/resized_img.jpg", img)
+    # cv2.imwrite("./Graphonomy-master/images_temp/resized_img.jpg", img)
 
     # Get mask of cloth
     print("Get mask of cloth\n")
@@ -39,12 +39,12 @@ if __name__ == '__main__':
     # Generate semantic segmentation using Graphonomy-Master library
     print("Generate semantic segmentation using Graphonomy-Master library\n")
     os.chdir("./Graphonomy-master")
-    terminnal_command = "./inference.py"
+    terminnal_command = "python Graphonomy-master/inference.py --img_path ../static_temp/resized_img.jpg --output_name ../static_temp/"
     os.system(terminnal_command)
     os.chdir("../")
 
     # Remove background image using semantic segmentation mask
-    mask_img = cv2.imread("./Graphonomy-master/images_temp/resized_segmentation_img.png", cv2.IMREAD_GRAYSCALE)
+    mask_img = cv2.imread("./static_temp/resized_segmentation_img.png", cv2.IMREAD_GRAYSCALE)
     mask_img = cv2.resize(mask_img, (768, 1024))
     k = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
     mask_img = cv2.erode(mask_img, k)
@@ -71,8 +71,7 @@ if __name__ == '__main__':
     # Run HR-VITON to generate final image
     print("\nRun HR-VITON to generate final image\n")
     os.chdir("./HR-VITON-main")
-    terminnal_command = "python test_generator.py --cuda True --test_name test1 --tocg_checkpoint mtviton.pth " \
-                        "--gpu_ids 0 --gen_checkpoint gen.pth --datasetting unpaired --data_list t2.txt --dataroot ./test"
+    terminnal_command = "python test_generator.py --cuda False --test_name test1 --data_list t2.txt --dataroot ./test"
     os.system(terminnal_command)
 
     # Add Background or Not
