@@ -1,4 +1,3 @@
-#torch==1.13.1
 #cupy-cuda11x
 fastapi
 ipywidgets
@@ -14,10 +13,12 @@ python-multipart
 scikit-learn
 scipy
 seaborn
+tensorboard
+tensorboardX
+torch==1.13.1
 torchmetrics
 tqdm
 uvicorn
 widgetsnbextension
 ydata-profiling
-tensorboard
-tensorboardX
+
