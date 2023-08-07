@@ -198,9 +198,9 @@ if __name__ == '__main__':
     '''argparse begin'''
     parser = argparse.ArgumentParser()
     # parser.add_argument('--loadmodel',default=None,type=str)
-    parser.add_argument('--loadmodel', default='./Graphonomy-master/data/pretrained_model/inference.pth', type=str)
-    parser.add_argument('--img_path', default='', type=str)
-    parser.add_argument('--output_path', default='', type=str)
+    parser.add_argument('--loadmodel', default='./data/pretrained_model/inference.pth', type=str)
+    parser.add_argument('--img_path', default='../static_temp/resized_img.jpg', type=str)
+    parser.add_argument('--output_path', default='../static_temp/', type=str)
     parser.add_argument('--output_name', default='resized_segmentation_img', type=str)
     parser.add_argument('--use_gpu', default=-1, type=int)
     # parser.add_argument('--cuda', default=False, help='cuda or cpu')

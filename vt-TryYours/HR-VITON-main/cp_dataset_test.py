@@ -142,12 +142,13 @@ class CPDatasetTest(data.Dataset):
         agnostic.paste(im, None, Image.fromarray(np.uint8(parse_head * 255), 'L'))
         agnostic.paste(im, None, Image.fromarray(np.uint8(parse_lower * 255), 'L'))
         return agnostic
+
     def __getitem__(self, index):
         im_name = self.im_names[index]
         c_name = {}
         c = {}
         cm = {}
-        #print(self.c_names)
+        # print(self.c_names)
         for key in self.c_names:
             c_name[key] = self.c_names[key][index]
             if key=="paired":

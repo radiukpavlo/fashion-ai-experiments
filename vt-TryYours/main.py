@@ -27,7 +27,7 @@ if __name__ == '__main__':
     # cv2.imwrite("./Graphonomy-master/images_temp/resized_img.jpg", img)
 
     # Get mask of cloth
-    print("Get mask of cloth\n")
+    print("\nGet mask of cloth\n")
     terminnal_command = "python get_cloth_mask.py"
     os.system(terminnal_command)
 
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     # Generate semantic segmentation using Graphonomy-Master library
     print("Generate semantic segmentation using Graphonomy-Master library\n")
     os.chdir("./Graphonomy-master")
-    terminnal_command = "python Graphonomy-master/inference.py --img_path ../static_temp/resized_img.jpg --output_name ../static_temp/"
+    terminnal_command = "python inference.py"
     os.system(terminnal_command)
     os.chdir("../")
 
@@ -56,11 +56,12 @@ if __name__ == '__main__':
     cv2.imwrite("./HR-VITON-main/test/test/image/00001_00.jpg", img)
 
     # Generate grayscale semantic segmentation image
+    print("\nGenerate grayscale semantic segmentation image\n")
     terminnal_command = "python get_seg_grayscale.py"
     os.system(terminnal_command)
 
     # Generate Densepose image using detectron2 library
-    print("\nGenerate Densepose image using detectron2 library\n")
+    print("Generate Densepose image using detectron2 library\n")
     terminnal_command = "python detectron2/projects/DensePose/apply_net.py dump detectron2/projects/DensePose/configs/densepose_rcnn_R_50_FPN_s1x.yaml \
     https://dl.fbaipublicfiles.com/densepose/densepose_rcnn_R_50_FPN_s1x/165712039/model_final_162be9.pkl \
     ./static_temp/origin.jpg --output output.pkl -v"
