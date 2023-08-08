@@ -1,5 +1,5 @@
-from posenet.decode import *
-from posenet.constants import *
+from decode import *
+from constants import *
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
