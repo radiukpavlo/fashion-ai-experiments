@@ -6,7 +6,7 @@ import json
 import posixpath
 import os
 
-from ..models.mobilenet_v1 import MOBILENET_V1_CHECKPOINTS
+from ..pose_models.mobilenet_v1 import MOBILENET_V1_CHECKPOINTS
 
 GOOGLE_CLOUD_STORAGE_DIR = 'https://storage.googleapis.com/tfjs-models/weights/posenet/'
 
@@ -38,7 +38,7 @@ def download_file(checkpoint, filename, base_dir):
     f.close()
 
 
-def download(checkpoint, base_dir='./weights/'):
+def download(checkpoint, base_dir='./pose_weights/'):
     """
 
     :param checkpoint:

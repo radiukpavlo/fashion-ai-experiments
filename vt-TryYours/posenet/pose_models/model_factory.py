@@ -6,7 +6,7 @@ import os
 
 from .mobilenet_v1 import MobileNetV1, MOBILENET_V1_CHECKPOINTS
 
-MODEL_DIR = './posenet/weights'
+MODEL_DIR = './posenet/pose_weights'
 DEBUG_OUTPUT = False
 
 

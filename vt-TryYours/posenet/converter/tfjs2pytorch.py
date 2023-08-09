@@ -9,7 +9,7 @@ import os
 import tempfile
 import torch
 
-from ..models.mobilenet_v1 import MobileNetV1, MOBILENET_V1_CHECKPOINTS
+from ..pose_models.mobilenet_v1 import MobileNetV1, MOBILENET_V1_CHECKPOINTS
 
 BASE_DIR = os.path.join(tempfile.gettempdir(), '_posenet_weights')
 

@@ -3,7 +3,7 @@ posenet.py
 """
 import torch
 import numpy as np
-from posenet.models.model_factory import load_model
+from posenet.pose_models.model_factory import load_model
 from posenet.utils import read_imgfile
 from posenet.decode_multi import decode_multiple_poses
 import json
