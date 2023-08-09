@@ -1,19 +1,15 @@
 """
-posenet
+posenet.py
 """
-
 import torch
 import numpy as np
-# from posenet.constants import *
-# from posenet.decode_multi import decode_multiple_poses
 from posenet.models.model_factory import load_model
 from posenet.utils import read_imgfile
 from posenet.decode_multi import decode_multiple_poses
 import json
 
-# name = "origin"
-# testfile = "origin"+".jpg"
-testfile = "./static_temp/resized_img.jpg"
+# testfile = "./static_temp/resized_img.jpg"
+testfile = "./static_temp/origin.jpg"
 net = load_model(101)
 # net = net.cuda()
 output_stride = net.output_stride

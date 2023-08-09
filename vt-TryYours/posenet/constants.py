@@ -1,3 +1,6 @@
+"""
+constants.py
+"""
 
 PART_NAMES = [
     "nose", "leftEye", "rightEye", "leftEar", "rightEar", "leftShoulder",

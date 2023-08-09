@@ -1,11 +1,9 @@
-import socket
+"""
+image segmentation inference
+"""
 import timeit
 import numpy as np
 from PIL import Image
-from datetime import datetime
-import os
-import sys
-from collections import OrderedDict
 
 # PyTorch includes
 import torch
@@ -33,6 +31,11 @@ label_colours = [(0, 0, 0), (128, 0, 0), (255, 0, 0), (0, 85, 0), (170, 0, 51),
 
 
 def flip(flip_x, dim):
+    """
+    :param flip_x:
+    :param dim:
+    :return:
+    """
     indices = [slice(None)] * flip_x.dim()
     indices[dim] = torch.arange(flip_x.size(dim) - 1, -1, -1,
                                 dtype=torch.long, device=flip_x.device)
@@ -86,11 +89,20 @@ def decode_labels(mask, num_images=1, num_classes=20):
 
 
 def read_img(img_path):
+    """
+    :param img_path:
+    :return:
+    """
     _img = Image.open(img_path).convert('RGB')  # return is RGB pic
     return _img
 
 
 def img_transform(img, transform=None):
+    """
+    :param img:
+    :param transform:
+    :return:
+    """
     sample = {'image': img, 'label': 0}
 
     sample = transform(sample)
@@ -191,7 +203,7 @@ def inference(net, img_path='', output_path='', output_name='f', use_gpu=False):
     cv2.imwrite(output_path + '/{}_gray.png'.format(output_name), results[0, :, :])
 
     end_time = timeit.default_timer()
-    print('time used for the multi-scale image inference' + ' is :' + str(end_time - start_time))
+    print(f"Time for the multi-scale image inference is {str(end_time - start_time)} sec.")
 
 
 if __name__ == '__main__':

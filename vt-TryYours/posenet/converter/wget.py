@@ -1,15 +1,22 @@
+"""
+wget.py
+"""
 import requests
 import json
 import posixpath
 import os
 
-from posenet import MOBILENET_V1_CHECKPOINTS
+from ..models.mobilenet_v1 import MOBILENET_V1_CHECKPOINTS
 
 GOOGLE_CLOUD_STORAGE_DIR = 'https://storage.googleapis.com/tfjs-models/weights/posenet/'
 
 
 def download_json(checkpoint, filename, base_dir):
-
+    """
+    :param checkpoint:
+    :param filename:
+    :param base_dir:
+    """
     url = posixpath.join(GOOGLE_CLOUD_STORAGE_DIR, checkpoint, filename)
     response = requests.get(url)
     data = json.loads(response.content)
@@ -17,15 +24,26 @@ def download_json(checkpoint, filename, base_dir):
     with open(os.path.join(base_dir, checkpoint, filename), 'w') as outfile:
         json.dump(data, outfile)
 
-def download_file(checkpoint, filename, base_dir):
 
+def download_file(checkpoint, filename, base_dir):
+    """
+    :param checkpoint:
+    :param filename:
+    :param base_dir:
+    """
     url = posixpath.join(GOOGLE_CLOUD_STORAGE_DIR, checkpoint, filename)
     response = requests.get(url)
     f = open(os.path.join(base_dir, checkpoint, filename), 'wb')
     f.write(response.content)
     f.close()
 
+
 def download(checkpoint, base_dir='./weights/'):
+    """
+
+    :param checkpoint:
+    :param base_dir:
+    """
     save_dir = os.path.join(base_dir, checkpoint)
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
@@ -42,6 +60,9 @@ def download(checkpoint, base_dir='./weights/'):
 
 
 def main():
+    """
+    The function that launch the script.
+    """
     checkpoint = MOBILENET_V1_CHECKPOINTS[101]
     download(checkpoint)
 

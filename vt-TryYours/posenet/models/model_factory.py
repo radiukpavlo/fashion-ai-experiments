@@ -1,14 +1,23 @@
+"""
+model_factory.py
+"""
 import torch
 import os
-import sys
 
-from mobilenet_v1 import MobileNetV1, MOBILENET_V1_CHECKPOINTS
+from .mobilenet_v1 import MobileNetV1, MOBILENET_V1_CHECKPOINTS
 
-MODEL_DIR = './posenet_models'
+MODEL_DIR = './posenet/weights'
 DEBUG_OUTPUT = False
 
 
 def load_model(model_id, output_stride=16, model_dir=MODEL_DIR):
+    """
+    load_model():
+    :param model_id:
+    :param output_stride:
+    :param model_dir:
+    :return:
+    """
     model_path = os.path.join(model_dir, MOBILENET_V1_CHECKPOINTS[model_id] + '.pth')
     if not os.path.exists(model_path):
         print('Cannot find models file %s, converting from tfjs...' % model_path)

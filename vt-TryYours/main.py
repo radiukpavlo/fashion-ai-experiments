@@ -12,7 +12,7 @@ from cloths_segmentation.pre_trained_models import create_model
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--background', type=bool, default=True, help='Define removing background or not')
+    parser.add_argument('--background', type=bool, default=False, help='Define removing background or not')
     opt = parser.parse_args()
 
     # Read input image
@@ -72,7 +72,7 @@ if __name__ == '__main__':
     # Run HR-VITON to generate final image
     print("\nRun HR-VITON to generate final image\n")
     os.chdir("./HR-VITON-main")
-    terminnal_command = "python test_generator.py --cuda False --test_name test1 --data_list t2.txt --dataroot ./test"
+    terminnal_command = "python test_generator.py --data_list t2.txt --dataroot ./test"
     os.system(terminnal_command)
 
     # Add Background or Not

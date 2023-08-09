@@ -1,11 +1,20 @@
-from decode import *
-from constants import *
+"""
+decode_multi.py
+"""
+import numpy as np
+from .decode import decode_pose
+from .constants import LOCAL_MAXIMUM_RADIUS, NUM_KEYPOINTS
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 
 
 def within_nms_radius_fast(pose_coords, squared_nms_radius, point):
+    """
+    :param pose_coords:
+    :param squared_nms_radius:
+    :param point:
+    :return:
+    """
     if not pose_coords.shape[0]:
         return False
     return np.any(np.sum((pose_coords - point) ** 2, axis=1) <= squared_nms_radius)
@@ -15,7 +24,13 @@ def get_instance_score_fast(
         exist_pose_coords,
         squared_nms_radius,
         keypoint_scores, keypoint_coords):
-
+    """
+    :param exist_pose_coords:
+    :param squared_nms_radius:
+    :param keypoint_scores:
+    :param keypoint_coords:
+    :return:
+    """
     if exist_pose_coords.shape[0]:
         s = np.sum((exist_pose_coords - keypoint_coords) ** 2, axis=2) > squared_nms_radius
         not_overlapped_scores = np.sum(keypoint_scores[np.all(s, axis=0)])
@@ -25,6 +40,12 @@ def get_instance_score_fast(
 
 
 def build_part_with_score_torch(score_threshold, local_max_radius, scores):
+    """
+    :param score_threshold:
+    :param local_max_radius:
+    :param scores:
+    :return:
+    """
     lmd = 2 * local_max_radius + 1
     max_vals = F.max_pool2d(scores, lmd, stride=1, padding=1)
     max_loc = (scores == max_vals) & (scores >= score_threshold)
@@ -61,7 +82,18 @@ def build_part_with_score_torch(score_threshold, local_max_radius, scores):
 def decode_multiple_poses(
         scores, offsets, displacements_fwd, displacements_bwd, output_stride,
         max_pose_detections=10, score_threshold=0.5, nms_radius=20, min_pose_score=0.5):
-
+    """
+    :param scores:
+    :param offsets:
+    :param displacements_fwd:
+    :param displacements_bwd:
+    :param output_stride:
+    :param max_pose_detections:
+    :param score_threshold:
+    :param nms_radius:
+    :param min_pose_score:
+    :return:
+    """
     # perform part scoring step on GPU as it's expensive
     # TODO determine how much more of this would be worth performing on the GPU
     part_scores, part_idx = build_part_with_score_torch(score_threshold, LOCAL_MAXIMUM_RADIUS, scores)

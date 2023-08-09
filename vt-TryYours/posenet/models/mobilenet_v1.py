@@ -1,3 +1,6 @@
+"""
+mobilenet_v1
+"""
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -51,6 +54,10 @@ class InputConv(nn.Module):
             inp, outp, k, stride, padding=_get_padding(k, stride, dilation), dilation=dilation)
 
     def forward(self, x):
+        """
+        :param x:
+        :return:
+        """
         return F.relu6(self.conv(x))
 
 
@@ -63,6 +70,10 @@ class SeperableConv(nn.Module):
         self.pointwise = nn.Conv2d(inp, outp, 1, 1)
 
     def forward(self, x):
+        """
+        :param x:
+        :return:
+        """
         x = F.relu6(self.depthwise(x))
         x = F.relu6(self.pointwise(x))
         return x
@@ -155,6 +166,10 @@ class MobileNetV1(nn.Module):
         self.displacement_bwd = nn.Conv2d(last_depth, 32, 1, 1)
 
     def forward(self, x):
+        """
+        :param x:
+        :return:
+        """
         x = self.features(x)
         heatmap = torch.sigmoid(self.heatmap(x))
         offset = self.offset(x)

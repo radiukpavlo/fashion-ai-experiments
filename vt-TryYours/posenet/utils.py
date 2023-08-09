@@ -1,10 +1,19 @@
+"""
+utils.py
+"""
 import cv2
 import numpy as np
 
-from constants import *
+from .constants import CONNECTED_PART_INDICES
 
 
 def valid_resolution(width, height, output_stride=16):
+    """
+    :param width:
+    :param height:
+    :param output_stride:
+    :return:
+    """
     target_width = (int(width) // output_stride) * output_stride + 1
     target_height = (int(height) // output_stride) * output_stride + 1
     return target_width, target_height
@@ -23,6 +32,12 @@ def _process_input(source_img, scale_factor=1.0, output_stride=16):
 
 
 def read_cap(cap, scale_factor=1.0, output_stride=16):
+    """
+    :param cap:
+    :param scale_factor:
+    :param output_stride:
+    :return:
+    """
     res, img = cap.read()
     if not res:
         raise IOError("webcam failure")
@@ -30,6 +45,12 @@ def read_cap(cap, scale_factor=1.0, output_stride=16):
 
 
 def read_imgfile(path, scale_factor=1.0, output_stride=16):
+    """
+    :param path:
+    :param scale_factor:
+    :param output_stride:
+    :return:
+    """
     img = cv2.imread(path)
     return _process_input(img, scale_factor, output_stride)
 
@@ -37,6 +58,15 @@ def read_imgfile(path, scale_factor=1.0, output_stride=16):
 def draw_keypoints(
         img, instance_scores, keypoint_scores, keypoint_coords,
         min_pose_confidence=0.5, min_part_confidence=0.5):
+    """
+    :param img:
+    :param instance_scores:
+    :param keypoint_scores:
+    :param keypoint_coords:
+    :param min_pose_confidence:
+    :param min_part_confidence:
+    :return:
+    """
     cv_keypoints = []
     for ii, score in enumerate(instance_scores):
         if score < min_pose_confidence:
@@ -50,6 +80,12 @@ def draw_keypoints(
 
 
 def get_adjacent_keypoints(keypoint_scores, keypoint_coords, min_confidence=0.1):
+    """
+    :param keypoint_scores:
+    :param keypoint_coords:
+    :param min_confidence:
+    :return:
+    """
     results = []
     for left, right in CONNECTED_PART_INDICES:
         if keypoint_scores[left] < min_confidence or keypoint_scores[right] < min_confidence:
@@ -63,6 +99,15 @@ def get_adjacent_keypoints(keypoint_scores, keypoint_coords, min_confidence=0.1)
 def draw_skeleton(
         img, instance_scores, keypoint_scores, keypoint_coords,
         min_pose_confidence=0.5, min_part_confidence=0.5):
+    """
+    :param img:
+    :param instance_scores:
+    :param keypoint_scores:
+    :param keypoint_coords:
+    :param min_pose_confidence:
+    :param min_part_confidence:
+    :return:
+    """
     out_img = img
     adjacent_keypoints = []
     for ii, score in enumerate(instance_scores):
@@ -78,7 +123,15 @@ def draw_skeleton(
 def draw_skel_and_kp(
         img, instance_scores, keypoint_scores, keypoint_coords,
         min_pose_score=0.5, min_part_score=0.5):
-
+    """
+    :param img:
+    :param instance_scores:
+    :param keypoint_scores:
+    :param keypoint_coords:
+    :param min_pose_score:
+    :param min_part_score:
+    :return:
+    """
     out_img = img
     adjacent_keypoints = []
     cv_keypoints = []

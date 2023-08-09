@@ -1,3 +1,6 @@
+"""
+tfjs2pytorch.py
+"""
 import json
 import struct
 import cv2
@@ -6,13 +9,16 @@ import os
 import tempfile
 import torch
 
-from posenet import MobileNetV1, MOBILENET_V1_CHECKPOINTS
-
+from ..models.mobilenet_v1 import MobileNetV1, MOBILENET_V1_CHECKPOINTS
 
 BASE_DIR = os.path.join(tempfile.gettempdir(), '_posenet_weights')
 
 
 def to_torch_name(tf_name):
+    """
+    :param tf_name:
+    :return:
+    """
     tf_name = tf_name.lower()
     tf_split = tf_name.split('/')
     tf_layer_split = tf_split[1].split('_')
@@ -42,10 +48,15 @@ def to_torch_name(tf_name):
 
 
 def load_variables(chkpoint, base_dir=BASE_DIR):
+    """
+    :param chkpoint:
+    :param base_dir:
+    :return:
+    """
     manifest_path = os.path.join(base_dir, chkpoint, "manifest.json")
     if not os.path.exists(manifest_path):
         print('Weights for checkpoint %s are not downloaded. Downloading to %s ...' % (chkpoint, base_dir))
-        from posenet.converter.wget import download
+        from wget import download
         download(chkpoint, base_dir)
         assert os.path.exists(manifest_path)
 
@@ -83,6 +94,13 @@ def _read_imgfile(path, width, height):
 
 
 def convert(model_id, model_dir, output_stride=16, image_size=513, check=True):
+    """
+    :param model_id:
+    :param model_dir:
+    :param output_stride:
+    :param image_size:
+    :param check:
+    """
     checkpoint_name = MOBILENET_V1_CHECKPOINTS[model_id]
     width = image_size
     height = image_size

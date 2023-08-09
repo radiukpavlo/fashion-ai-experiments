@@ -1,11 +1,24 @@
+"""
+decode.py
+"""
 import numpy as np
-
-from constants import *
+from .constants import PARENT_CHILD_TUPLES
 
 
 def traverse_to_targ_keypoint(
         edge_id, source_keypoint, target_keypoint_id, scores, offsets, output_stride, displacements
 ):
+    """
+
+    :param edge_id:
+    :param source_keypoint:
+    :param target_keypoint_id:
+    :param scores:
+    :param offsets:
+    :param output_stride:
+    :param displacements:
+    :return:
+    """
     height = scores.shape[1]
     width = scores.shape[2]
 
@@ -27,13 +40,20 @@ def traverse_to_targ_keypoint(
 
 
 def decode_pose(
-        root_score, root_id, root_image_coord,
-        scores,
-        offsets,
-        output_stride,
-        displacements_fwd,
-        displacements_bwd
+        root_score, root_id, root_image_coord, scores, offsets, output_stride, displacements_fwd, displacements_bwd
 ):
+    """
+
+    :param root_score:
+    :param root_id:
+    :param root_image_coord:
+    :param scores:
+    :param offsets:
+    :param output_stride:
+    :param displacements_fwd:
+    :param displacements_bwd:
+    :return:
+    """
     num_parts = scores.shape[0]
     num_edges = len(PARENT_CHILD_TUPLES)
 
