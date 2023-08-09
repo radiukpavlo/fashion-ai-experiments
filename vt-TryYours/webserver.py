@@ -1,10 +1,8 @@
 """
 webserver.py
 """
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 from flask_ngrok import run_with_ngrok
-from werkzeug.utils import secure_filename
-from PIL import Image
 import os
 
 app = Flask(__name__)
@@ -15,11 +13,17 @@ data_list = []
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
+    """
+    :return:
+    """
     return render_template('main.html')
 
 
 @app.route('/fileUpload', methods=['GET', 'POST'])
 def file_upload():
+    """
+    :return:
+    """
     if request.method == 'POST':
         f = request.files['file']
         f_src = 'static/origin_web.jpg'
@@ -30,6 +34,9 @@ def file_upload():
 
 @app.route('/fileUpload_cloth', methods=['GET', 'POST'])
 def fileUpload_cloth():
+    """
+    :return:
+    """
     if request.method == 'POST':
         f = request.files['file']
         f_src = 'static/cloth_web.jpg'
@@ -40,13 +47,17 @@ def fileUpload_cloth():
 
 @app.route('/view', methods=['GET', 'POST'])
 def view():
+    """
+    :return:
+    """
     print("inference start")
 
     terminnal_command = "python main.py"
     os.system(terminnal_command)
 
     print("inference end")
-    return render_template('view.html', data_list=data_list)  # html을 렌더하며 DB에서 받아온 값들을 넘김
+    # Rendering html and transferring values from the database
+    return render_template('view.html', data_list=data_list)
 
 
 if __name__ == '__main__':

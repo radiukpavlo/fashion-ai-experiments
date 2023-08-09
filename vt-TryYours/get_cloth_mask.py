@@ -1,4 +1,6 @@
-from pylab import imshow
+"""
+get_cloth_mask.py
+"""
 import numpy as np
 import cv2
 import torch
@@ -37,8 +39,11 @@ if b.shape[1] <= 600 and b.shape[0] <= 500:
     b = cv2.resize(b, (int(b.shape[1] * 1.2), int(b.shape[0] * 1.2)))
     b_img = cv2.resize(b_img, (int(b_img.shape[1] * 1.2), int(b_img.shape[0] * 1.2)))
 shape = b_img.shape
-img[int((1024 - shape[0]) / 2): 1024 - int((1024 - shape[0]) / 2), int((768 - shape[1]) / 2):768 - int((768 - shape[1]) / 2)] = b
-seg_img[int((1024 - shape[0]) / 2): 1024 - int((1024 - shape[0]) / 2), int((768 - shape[1]) / 2):768 - int((768 - shape[1]) / 2)] = b_img
+
+b = img[int((1024 - shape[0]) / 2): 1024 - int((1024 - shape[0]) / 2),
+    int((768 - shape[1]) / 2):768 - int((768 - shape[1]) / 2)]
+b_img = seg_img[int((1024 - shape[0]) / 2): 1024 - int((1024 - shape[0]) / 2),
+        int((768 - shape[1]) / 2):768 - int((768 - shape[1]) / 2)] = b_img
 
 cv2.imwrite("./HR-VITON-main/test/test/cloth/00001_00.jpg", img)
 cv2.imwrite("./HR-VITON-main/test/test/cloth-mask/00001_00.jpg", seg_img)

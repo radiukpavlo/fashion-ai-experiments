@@ -1,13 +1,13 @@
+"""
+main script
+"""
 import argparse
 import glob
 import os
-import sys
-import warnings
 
 import cv2
 import numpy as np
-from PIL import Image
-from cloths_segmentation.pre_trained_models import create_model
+# from cloths_segmentation.pre_trained_models import create_model
 
 
 if __name__ == '__main__':

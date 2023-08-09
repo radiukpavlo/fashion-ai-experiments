@@ -34,7 +34,7 @@ with torch.no_grad():
 
 poses = []
 
-# find face keypoints & detect face mask
+# find face key points & detect face mask
 for pi in range(len(pose_scores)):
     if pose_scores[pi] != 0.:
         print('Pose #%d, score = %f' % (pi, pose_scores[pi]))
@@ -44,9 +44,13 @@ for pi in range(len(pose_scores)):
 
 # map rccpose-to-openpose mapping
 indices = [0, (5, 6), 6, 8, 10, 5, 7, 9, 12, 14, 16, 11, 13, 15, 2, 1, 4, 3]
+
 i = 0
+
 pose = poses[np.argmax(pose_scores)]
+
 openpose = []
+
 for ix in indices:
     if ix == (5, 6):
         openpose.append([int((pose[5][1]+pose[6][1])/2), int((pose[5][0]+pose[6][0])/2), 1])   
@@ -60,12 +64,9 @@ for x, y, z in openpose:
     coords.append(float(z))
 
 data = {"version": 1.0}
-pose_dic = {}
-pose_dic['pose_keypoints_2d'] = coords
-tmp = []
-tmp.append(pose_dic)
+pose_dic = {'pose_keypoints_2d': coords}
+tmp = [pose_dic]
 data["people"] = tmp
-
 
 # VITON's .json is in ACGPN_TestData/test_pose/000001_0_keypoints.json
 pose_name = './HR-VITON-main/test/test/openpose_json/00001_00_keypoints.json' 

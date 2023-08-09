@@ -1,6 +1,7 @@
-import cv2
+"""
+get_densepose.py
+"""
 from PIL import Image
-import pickle
 import json
 import numpy as np
 
@@ -40,7 +41,9 @@ for y_idx in range(i.shape[0]):
 box = json_data[2]
 box[2] = box[2] - box[0]
 box[3] = box[3] - box[1]
+
 x, y, w, h = [int(v) for v in box]
+
 bg = np.zeros((img_h, img_w, 3))
 bg[y:y + h, x:x + w, :] = seg_img
 bg_img = Image.fromarray(np.uint8(bg), "RGB")
