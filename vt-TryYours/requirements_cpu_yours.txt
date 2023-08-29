@@ -72,7 +72,8 @@ MarkupSafe==2.1.1
 matplotlib==3.2.2
 mistune==0.8.4
 mlxtend==0.19.0
-mmcv==1.0.5
+openmim==0.2.1
+#mmcv==1.0.5
 msgpack==0.6.2
 nbconvert==6.4.5
 nbformat==5.2.0
@@ -114,7 +115,7 @@ pytorch-lightning==1.5.10
 pytorch-metric-learning==0.9.88
 pytz==2020.1
 PyWavelets==1.1.1
-pywinpty==2.0.9
+#pywinpty==2.0.9
 PyYAML==5.3.1
 pyzmq==23.2.1
 requests==2.22.0
